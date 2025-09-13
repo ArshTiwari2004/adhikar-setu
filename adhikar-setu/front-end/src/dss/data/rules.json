@@ -1,0 +1,305 @@
+{
+  "schemes": {
+    "pm-kisan": {
+      "name": "PM-KISAN",
+      "ministry": "Agriculture & Farmers Welfare",
+      "rules": [
+        {
+          "condition": "AND",
+          "criteria": [
+            {
+              "field": "fraHolder",
+              "operator": "equals",
+              "value": true,
+              "description": "Must be FRA Patta holder"
+            },
+            {
+              "field": "landSize",
+              "operator": "lte",
+              "value": 2.0,
+              "description": "Land size should be <= 2 hectares"
+            },
+            {
+              "field": "landSize",
+              "operator": "gt",
+              "value": 0,
+              "description": "Must have cultivable land"
+            },
+            {
+              "field": "hasAadhaar",
+              "operator": "equals",
+              "value": true,
+              "description": "Must have Aadhaar card",
+              "default": true
+            },
+            {
+              "field": "hasBankAccount",
+              "operator": "equals",
+              "value": true,
+              "description": "Must have bank account",
+              "default": true
+            }
+          ]
+        }
+      ],
+      "priority_score": 85,
+      "documents_required": [
+        "Land Record/FRA Patta",
+        "Aadhaar Card",
+        "Bank Account Details"
+      ]
+    },
+    "mgnrega": {
+      "name": "MGNREGA",
+      "ministry": "Rural Development",
+      "rules": [
+        {
+          "condition": "AND",
+          "criteria": [
+            {
+              "field": "hasJobCard",
+              "operator": "equals",
+              "value": true,
+              "description": "Must have MGNREGA Job Card"
+            },
+            {
+              "condition": "OR",
+              "criteria": [
+                {
+                  "condition": "AND",
+                  "criteria": [
+                    {
+                      "field": "category",
+                      "operator": "equals",
+                      "value": "ST",
+                      "description": "ST category for 150 days"
+                    },
+                    {
+                      "field": "fraHolder",
+                      "operator": "equals",
+                      "value": true,
+                      "description": "FRA holder for extended benefits"
+                    }
+                  ]
+                },
+                {
+                  "field": "category",
+                  "operator": "in",
+                  "value": ["SC", "OBC", "General"],
+                  "description": "Other categories eligible for 100 days"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "benefits": {
+        "ST_with_FRA": "150 days guaranteed employment",
+        "others": "100 days guaranteed employment"
+      },
+      "priority_score": 90,
+      "documents_required": [
+        "MGNREGA Job Card",
+        "FRA Patta (for ST households)",
+        "Aadhaar Card"
+      ]
+    },
+    "pmay-gramin": {
+      "name": "PMAY-Gramin",
+      "ministry": "Rural Development",
+      "rules": [
+        {
+          "condition": "AND",
+          "criteria": [
+            {
+              "field": "fraHolder",
+              "operator": "equals",
+              "value": true,
+              "description": "Must be FRA Patta holder"
+            },
+            {
+              "field": "housingStatus",
+              "operator": "in",
+              "value": ["Kutcha", "Semi-Pucca"],
+              "description": "Should not have pucca house"
+            },
+            {
+              "field": "seccVerified",
+              "operator": "equals",
+              "value": true,
+              "description": "SECC verification required",
+              "default": true
+            }
+          ]
+        }
+      ],
+      "priority_score": 80,
+      "documents_required": [
+        "SECC Data/Gram Sabha Verification",
+        "FRA Patta",
+        "Aadhaar Card"
+      ]
+    },
+    "jal-jeevan": {
+      "name": "Jal Jeevan Mission",
+      "ministry": "Jal Shakti",
+      "rules": [
+        {
+          "condition": "AND",
+          "criteria": [
+            {
+              "field": "villageWaterCoverage",
+              "operator": "lt",
+              "value": 100,
+              "description": "Village should lack adequate tap water coverage",
+              "default": 50
+            },
+            {
+              "condition": "OR",
+              "criteria": [
+                {
+                  "field": "communityFRAStatus",
+                  "operator": "equals",
+                  "value": true,
+                  "description": "Community FRA required for infrastructure"
+                },
+                {
+                  "field": "fraHolder",
+                  "operator": "equals",
+                  "value": true,
+                  "description": "Individual FRA holder gets priority"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "priority_score": 75,
+      "documents_required": [
+        "Village Water Status Report",
+        "Community FRA Patta"
+      ]
+    },
+    "dajgua": {
+      "name": "DAJGUA (PM-JUGA)",
+      "ministry": "Tribal Affairs",
+      "rules": [
+        {
+          "condition": "AND",
+          "criteria": [
+            {
+              "field": "villageSTPopulationPercent",
+              "operator": "gte",
+              "value": 50,
+              "description": "Village should have ≥50% ST population",
+              "default": 60
+            },
+            {
+              "field": "villageTotalPopulation",
+              "operator": "gte",
+              "value": 500,
+              "description": "Village should have ≥500 total population",
+              "default": 800
+            },
+            {
+              "field": "fraVillageStatus",
+              "operator": "equals",
+              "value": true,
+              "description": "Village should have FRA status",
+              "default": true
+            },
+            {
+              "field": "category",
+              "operator": "equals",
+              "value": "ST",
+              "description": "Beneficiary must be from ST category"
+            }
+          ]
+        }
+      ],
+      "priority_score": 95,
+      "documents_required": [
+        "Census/Population Data",
+        "FRA Village Records",
+        "Population Certificate"
+      ]
+    },
+    "pmjay": {
+      "name": "Ayushman Bharat PMJAY",
+      "ministry": "Health & Family Welfare",
+      "rules": [
+        {
+          "condition": "AND",
+          "criteria": [
+            {
+              "condition": "OR",
+              "criteria": [
+                {
+                  "field": "householdIncomeStatus",
+                  "operator": "equals",
+                  "value": "BPL",
+                  "description": "BPL household"
+                },
+                {
+                  "field": "seccDeprivationCategory",
+                  "operator": "in",
+                  "value": ["D1", "D2", "D3", "D4"],
+                  "description": "SECC deprivation criteria"
+                }
+              ]
+            },
+            {
+              "condition": "OR",
+              "criteria": [
+                {
+                  "field": "fraHolder",
+                  "operator": "equals",
+                  "value": true,
+                  "description": "FRA Patta holder gets priority"
+                },
+                {
+                  "field": "category",
+                  "operator": "in",
+                  "value": ["ST", "SC"],
+                  "description": "Vulnerable categories"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "priority_score": 85,
+      "documents_required": [
+        "SECC Data",
+        "Ration Card/Caste Certificate",
+        "FRA Patta",
+        "Aadhaar Card"
+      ]
+    }
+  },
+  "priority_matrix": {
+    "description": "Priority scoring based on FRA status and scheme importance",
+    "factors": {
+      "fra_holder_bonus": 10,
+      "st_category_bonus": 5,
+      "bpl_status_bonus": 8,
+      "housing_need_multiplier": 1.2,
+      "employment_need_multiplier": 1.1
+    }
+  },
+  "village_level_schemes": ["jal-jeevan", "dajgua"],
+  "individual_level_schemes": ["pm-kisan", "mgnrega", "pmay-gramin", "pmjay"],
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2024-12-01",
+    "rule_engine": "DSS-FRA-CSS-v1",
+    "total_schemes": 6,
+    "cross_ministry_coverage": [
+      "Agriculture & Farmers Welfare",
+      "Rural Development", 
+      "Jal Shakti",
+      "Tribal Affairs",
+      "Health & Family Welfare"
+    ]
+  }
+}
