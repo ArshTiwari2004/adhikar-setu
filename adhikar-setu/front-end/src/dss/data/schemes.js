@@ -48,7 +48,7 @@ export const schemes = [
     ],
     
     color: 'from-blue-500 to-cyan-600',
-    link :'https://nrega.nic.in/netnrega/home.aspx'
+    link :'https://nrega.dord.gov.in/MGNREGA_new/Nrega_home.aspx'
   },
   {
     id: 'pmay-gramin',
@@ -73,7 +73,7 @@ export const schemes = [
     ],
     
     color: 'from-orange-500 to-red-600',
-    link: 'https://pmayg.nic.in/netiay/home.aspx'
+    link: 'https://pmayg.dord.gov.in/netiayHome/home.aspx'
   },
   {
     id: 'jal-jeevan',
@@ -123,7 +123,7 @@ export const schemes = [
     ],
     
     color: 'from-purple-500 to-indigo-600',
-    link: 'https://tribal.nic.in/PMJUGA.aspx'
+    link: 'https://tribal.nic.in/dajagua.aspx'
   },
   {
     id: 'pmjay',
@@ -148,7 +148,7 @@ export const schemes = [
     ],
   
     color: 'from-pink-500 to-rose-600',
-    link: 'https://pmjay.gov.in/'
+    link: 'https://nha.gov.in/PM-JAY'
   }
 ];
 
