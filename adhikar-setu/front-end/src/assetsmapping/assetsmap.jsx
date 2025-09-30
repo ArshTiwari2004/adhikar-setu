@@ -40,13 +40,13 @@ function AssetMapping() {
     return ["overlay1.png", "overlay2.png", "overlay3.png"];
   };
 
-  // const currentAnalytics = getCurrentAnalytics();
   const currentImages = getCurrentImages();
 
   const indiaOsmEmbedSrc = useMemo(() => {
-    // India bounding box approximate (lng/lat): [minLon, minLat, maxLon, maxLat]
     const bbox = [68.1766, 6.5546, 97.4026, 35.6745];
-    return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox.join("%2C")}&layer=mapnik`;
+    return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox.join(
+      "%2C"
+    )}&layer=mapnik`;
   }, []);
 
   const handleShowAnalytics = () => setMode("analytics");
@@ -106,7 +106,7 @@ function AssetMapping() {
                   value={selectedDistrict}
                   onChange={(e) => {
                     setSelectedDistrict(e.target.value);
-                    setMode(null); // Reset mode when district changes
+                    setMode(null);
                   }}
                   disabled={!isDistrictEnabled}
                   className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
@@ -124,6 +124,7 @@ function AssetMapping() {
                 </select>
               </div>
 
+              {/* Button group with the new button */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Button
                   onClick={handleShowAnalytics}
@@ -139,10 +140,24 @@ function AssetMapping() {
                   Check Mapping
                 </Button>
               </div>
+              <div className="w-full flex justify-center mt-4">
+                {/* New Button */}
+                <Button
+                  className="bg-black text-white hover:bg-gray-800"
+                  variant="secondary"
+                  onClick={() =>
+                    (window.location.href =
+                      "http://adhikar-setu-assetmapping.streamlit.app")
+                  }
+                >
+                  Test the model
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
       {mode === "analytics" &&
         selectedState &&
         selectedDistrict &&
@@ -150,16 +165,16 @@ function AssetMapping() {
           const oldData = getConditionData(
             selectedState,
             selectedDistrict,
-            "old",
+            "old"
           );
           const newData = getConditionData(
             selectedState,
             selectedDistrict,
-            "new",
+            "new"
           );
           const changeData = calculateLandUseChange(
             selectedState,
-            selectedDistrict,
+            selectedDistrict
           );
 
           const categories = [
@@ -199,7 +214,6 @@ function AssetMapping() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {/* Current Land Use */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {categories.map((cat) => {
                       const Icon = cat.icon;
@@ -224,7 +238,6 @@ function AssetMapping() {
                     })}
                   </div>
 
-                  {/* Comparison */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="bg-gray-50 rounded-xl p-4">
                       <h3 className="text-lg font-bold text-gray-900 mb-3">
@@ -240,7 +253,11 @@ function AssetMapping() {
                             <span className="text-sm">
                               {oldData[cat.key]}% → {newData[cat.key]}%
                               <span
-                                className={`ml-2 font-bold ${changeData[cat.key] >= 0 ? "text-green-600" : "text-red-600"}`}
+                                className={`ml-2 font-bold ${
+                                  changeData[cat.key] >= 0
+                                    ? "text-green-600"
+                                    : "text-red-600"
+                                }`}
                               >
                                 ({changeData[cat.key] > 0 ? "+" : ""}
                                 {changeData[cat.key]}%)
@@ -263,8 +280,8 @@ function AssetMapping() {
                               (c) =>
                                 newData[c.key] ===
                                 Math.max(
-                                  ...categories.map((cat) => newData[cat.key]),
-                                ),
+                                  ...categories.map((cat) => newData[cat.key])
+                                )
                             )?.name
                           }{" "}
                           ({Math.max(...categories.map((c) => newData[c.key]))}
@@ -274,12 +291,14 @@ function AssetMapping() {
                           <strong>Biggest Change:</strong>{" "}
                           {(() => {
                             const maxChange = Math.max(
-                              ...Object.values(changeData).map(Math.abs),
+                              ...Object.values(changeData).map(Math.abs)
                             );
                             const cat = categories.find(
-                              (c) => Math.abs(changeData[c.key]) === maxChange,
+                              (c) => Math.abs(changeData[c.key]) === maxChange
                             );
-                            return `${cat?.name} (${changeData[cat?.key] > 0 ? "+" : ""}${changeData[cat?.key]}%)`;
+                            return `${cat?.name} (${
+                              changeData[cat?.key] > 0 ? "+" : ""
+                            }${changeData[cat?.key]}%)`;
                           })()}
                         </p>
                       </div>
@@ -290,6 +309,7 @@ function AssetMapping() {
             </Card>
           );
         })()}
+
       {mode === "mapping" && (
         <Card className="mt-6">
           <CardHeader>
@@ -305,18 +325,10 @@ function AssetMapping() {
                   <div
                     key={index}
                     className="bg-gray-100 rounded-xl
-                    // overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105
                     flex flex-col items-center justify-center"
                   >
                     <div className="aspect-w-16 aspect-h-9 w-250">
-                      {/* <div className="text-center p-8">*/}
-                      {/* <Image className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                        <p className="text-gray-600 font-medium">{image}</p>
-                        <p className="text-sm text-gray-500 mt-2">
-                          Image placeholder
-                        </p>*/}
                       <img src={image} />
-                      {/* </div>*/}
                     </div>
                     <div className="p-4">
                       <h3 className="font-semibold text-gray-900 capitalize">

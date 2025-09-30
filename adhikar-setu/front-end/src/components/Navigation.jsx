@@ -107,6 +107,12 @@ const Navigation = ({
         roles: ["sdlc", "frc"],
       },
       {
+        id: "asset-mapping",
+        name: language === "en" ? "Asset Mapping" : "संपत्ति मानचित्रण",
+        icon: Map,
+        roles: ["frc", "sdlc", "dlc", "mota"],
+      },
+      {
         id: "public-atlas",
         name: language === "en" ? "Public Atlas" : "सार्वजनिक एटलस",
         icon: Globe,

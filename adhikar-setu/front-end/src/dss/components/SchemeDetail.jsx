@@ -1,8 +1,9 @@
 // src/dss/components/SchemeDetail.js
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, FileText, ExternalLink, Calendar, Users, Target, Banknote } from 'lucide-react';
+import { CheckCircle, FileText, ExternalLink, Calendar, Users, Target, Banknote } from 'lucide-react';
 import { schemes } from '../data/schemes.js';
+import BackButton from '../../global/BackButton';
 
 const SchemeDetail = () => {
   const { schemeId } = useParams();
@@ -32,16 +33,11 @@ const SchemeDetail = () => {
       {/* Header Section */}
       <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-12">
         <div className="max-w-6xl mx-auto px-4">
-          <Link
-            to="/dss"
-            className="inline-flex items-center text-green-100 hover:text-white font-medium mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to DSS
-          </Link>
+          
+          <BackButton />
 
           <div className="flex flex-col md:flex-row items-start">
-            <div className={`p-5 bg-opacity-20 rounded-2xl mr-6 mb-4 md:mb-0 backdrop-blur-sm`}>
+            <div className={`p-5 bg-opacity-20 rounded-2xl mr-6 mb-4 md:mb-0 `}>
               <IconComponent className="w-12 h-12" />
             </div>
             <div className="flex-1">
