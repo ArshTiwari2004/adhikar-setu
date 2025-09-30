@@ -20,12 +20,19 @@ const LoginContainer = ({ onLogin }) => {
 
   function getTotalSteps(role) {
     if (!role) return 4;
-    if (["slmc", "mota", "ngo", "researcher"].includes(role)) return 3; // No location needed
-    if (role === "public") return 2; // No auth needed
-    return 4; // Role + Language + Location + Auth
+    if (["slmc", "mota"].includes(role)) return 3; // Require login, no location
+    if (["ngo", "researcher", "public"].includes(role)) return 2; // No login required
+    return 4; // Default (role + lang + location + auth)
   }
 
   const handleNext = () => {
+    if (
+      ["ngo", "researcher", "public"].includes(formData.role) &&
+      currentStep === 2
+    ) {
+      onLogin(formData);
+      return;
+    }
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     }
@@ -81,9 +88,24 @@ const LoginContainer = ({ onLogin }) => {
           />
         );
       case 3:
-        if (["slmc", "mota", "ngo", "researcher"].includes(formData.role)) {
+        // SLMC / MoTA go to auth
+        if (["slmc", "mota"].includes(formData.role)) {
           return <AuthenticationForm formData={formData} onLogin={onLogin} />;
         }
+        // NGO / Researcher skip login, finish immediately
+        if (["ngo", "researcher", "public"].includes(formData.role)) {
+          onLogin(formData); // Auto-login/finish
+          return (
+            <div className="text-center text-gray-700">
+              <p>
+                {formData.language === "hi"
+                  ? "आप सार्वजनिक दृश्य में हैं • कोई लॉगिन आवश्यक नहीं"
+                  : "You are in public view • No login required"}
+              </p>
+            </div>
+          );
+        }
+        // Others need location
         return (
           <LocationSelection
             formData={formData}
@@ -100,8 +122,7 @@ const LoginContainer = ({ onLogin }) => {
   const isAuthStep = () => {
     return (
       currentStep === 4 ||
-      (currentStep === 3 &&
-        ["slmc", "mota", "ngo", "researcher"].includes(formData.role))
+      (currentStep === 3 && ["slmc", "mota"].includes(formData.role))
     );
   };
 

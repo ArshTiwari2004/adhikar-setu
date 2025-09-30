@@ -36,10 +36,35 @@ const PublicAtlas = lazy(() => import("./components/PublicAtlas"));
 
 // ---------- Protected Route Component ----------
 const ProtectedRoute = ({ children, allowedRoles, user, language }) => {
-  // if (!user) {
-  //   return <Navigate to="/login" replace />;
-  // }
+  const location = useLocation();
+  console.log(
+    "ProtectedRoute → path:",
+    location.pathname,
+    "allowedRoles:",
+    allowedRoles,
+    "user:",
+    user
+  );
 
+  // If no user at all → block access
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">
+            {language === "en" ? "Access Denied" : "पहुंच अस्वीकृत"}
+          </h2>
+          <p className="text-gray-600">
+            {language === "en"
+              ? "You are not authorized to access this page."
+              : "आपको इस पृष्ठ तक पहुंच की अनुमति नहीं है।"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // If role not in allowedRoles → block access
   if (!allowedRoles.includes(user?.role)) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -51,7 +76,7 @@ const ProtectedRoute = ({ children, allowedRoles, user, language }) => {
           </h2>
           <p className="text-gray-600">
             {language === "en"
-              ? "You do not have permission to access this page or this page is under development."
+              ? "You do not have permission to access   this page or this page is under development."
               : "आपके पास इस पृष्ठ तक पहुंचने की अनुमति नहीं है।"}
           </p>
         </div>
@@ -150,6 +175,11 @@ function App() {
   const handleLogin = (user) => {
     setCurrentUser(user);
     localStorage.setItem("user", JSON.stringify(user));
+
+    if (["public", "ngo", "researcher"].includes(user.role)) {
+      navigate("/public");
+      return;
+    }
 
     if (user.role === "gram_sabha") {
       navigate("/claimant-dashboard"); // send gram sabha users here
@@ -404,10 +434,23 @@ function App() {
                 }
               />
 
+              <Route
+                path="/public"
+                element={
+                  <ProtectedRoute
+                    allowedRoles={["public", "ngo", "researcher"]}
+                    user={currentUser}
+                    language={language}
+                  >
+                    <Public user={currentUser} language={language} />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* routes to test, this will be removed later from here and put in for specific roles */}
               {/* <Route path="/doc-digitize" element={<FinalDoc />} /> */}
               {/* <Route path="/location-detail" element={<LocationDetail />} /> */}
-              <Route path="/public" element={<Public />} />
+              {/* <Route path="/public" element={<Public />} /> */}
 
               {/* Catch-all → Redirect to appropriate page */}
               <Route

@@ -29,14 +29,14 @@ export const registerUser = async (userData) => {
         await setDoc(doc(db, 'users', user.uid), {
             uid: user.uid,
             email: userData.email,
-            role: userData.role,
+            role: userData.role.toLowerCase(),
             language: userData.language,
             state: userData.state || null,
             district: userData.district || null,
             village: userData.village || null,
             createdAt: serverTimestamp(),
             lastLogin: serverTimestamp(),
-            isApproved: userData.role === 'public' ? true : false, // Auto-approve public users
+            isApproved: ["public", "ngo", "researcher"].includes(userData.role),
             isActive: true,
             profile: {
                 name: userData.name || userData.email.split('@')[0],
@@ -45,15 +45,16 @@ export const registerUser = async (userData) => {
             }
         });
 
-        return {
-            success: true,
-            user: {
-                uid: user.uid,
-                email: userData.email,
-                role: userData.role,
-                isApproved: userData.role === 'public'
-            }
-        };
+     return {
+  success: true,
+  user: {
+    uid: user.uid,
+    email: userData.email,
+    role: userData.role.toLowerCase(),
+    isApproved: ["public", "ngo", "researcher"].includes(userData.role.toLowerCase())
+  }
+};
+
     } catch (error) {
         return {
             success: false,

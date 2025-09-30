@@ -47,14 +47,17 @@ const RoleSelection = ({ selectedRole, onRoleSelect, language }) => {
     },
     {
       id: "ngo",
-      name: language === "hi" ? "एनजीओ / अनुसंधानकर्ता" : "NGO / Researcher",
-      subtitle: language === "hi" ? "बाहरी हितधारक" : "External Stakeholder",
-    },
-    {
-      id: "public",
-      name: language === "hi" ? "सार्वजनिक दृश्य" : "Public View",
+      name:
+        language === "hi"
+          ? "एनजीओ / अनुसंधानकर्ता"
+          : "NGO / Researcher/ Public View",
       subtitle: language === "hi" ? "लॉगिन आवश्यक नहीं" : "No Login Required",
     },
+    // {
+    //   id: "public",
+    //   name: language === "hi" ? "सार्वजनिक दृश्य" : "Public View",
+    //   subtitle: language === "hi" ? "लॉगिन आवश्यक नहीं" : "No Login Required",
+    // },
   ];
 
   return (
