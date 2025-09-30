@@ -23,6 +23,7 @@ import Map from "./components/Map";
 import NotFoundPage from "./global/NotFoundPage";
 import AssetMapping from "./assetsmapping/assetsmap";
 import Public from "./public/Public";
+import { AlertCircle } from "lucide-react";
 
 // Lazy load route components for better performance
 const Dashboard = lazy(() => import("./components/Dashboard"));
@@ -35,7 +36,13 @@ const DSSLayer = lazy(() => import("./components/DSSLayer"));
 const PublicAtlas = lazy(() => import("./components/PublicAtlas"));
 
 // ---------- Protected Route Component ----------
-const ProtectedRoute = ({ children, allowedRoles, user, language }) => {
+const ProtectedRoute = ({
+  children,
+  allowedRoles,
+  user,
+  language,
+  onLogout,
+}) => {
   const location = useLocation();
   console.log(
     "ProtectedRoute → path:",
@@ -52,33 +59,68 @@ const ProtectedRoute = ({ children, allowedRoles, user, language }) => {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-600 mb-4">
-            {language === "en" ? "Access Denied" : "पहुंच अस्वीकृत"}
+            {language === "en" ? "Login Required" : "लॉगिन आवश्यक"}
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 mb-4">
             {language === "en"
-              ? "You are not authorized to access this page."
-              : "आपको इस पृष्ठ तक पहुंच की अनुमति नहीं है।"}
+              ? "Please sign in to continue and access this page."
+              : "कृपया इस पृष्ठ तक पहुँचने के लिए साइन इन करें।"}
           </p>
         </div>
       </div>
     );
   }
 
-  // If role not in allowedRoles → block access
+  // Case: Role not allowed
   if (!allowedRoles.includes(user?.role)) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">
+          {/* Icon + Sorry message */}
+          <div className="flex items-center justify-center mb-4">
+            <AlertCircle className="w-12 h-12 text-red-500 mr-2" />
+            <h2 className="text-2xl font-bold text-red-600">
+              {language === "en" ? "Sorry!" : "क्षमा करें!"}
+            </h2>
+          </div>
+
+          <p className="text-gray-600 mb-4">
             {language === "en"
-              ? "Access Denied or Under Development"
-              : "पहुंच अस्वीकृत या विकासाधीन"}
-          </h2>
-          <p className="text-gray-600">
-            {language === "en"
-              ? "You do not have permission to access   this page or this page is under development."
-              : "आपके पास इस पृष्ठ तक पहुंचने की अनुमति नहीं है।"}
+              ? "This page is currently under development. We’re still working on it and will launch it soon."
+              : "यह पृष्ठ वर्तमान में विकासाधीन है। हम अभी भी इस पर काम कर रहे हैं और इसे जल्द ही लॉन्च करेंगे।"}
           </p>
+
+          <p className="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-md border border-yellow-300 inline-block">
+            {language === "en"
+              ? "Click on Logout from the dropdown menu in the profile icon above."
+              : "ऊपर प्रोफ़ाइल आइकन में ड्रॉपडाउन मेनू से लॉगआउट पर क्लिक करें"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Case: Under development ( pass a prop `isUnderDev`)
+  if (children?.props?.underDevelopment) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-yellow-600 mb-4">
+            {language === "en"
+              ? "Feature Under Development"
+              : "फ़ीचर विकासाधीन है"}
+          </h2>
+          <p className="text-gray-600 mb-4">
+            {language === "en"
+              ? "This feature is not yet available. Please check back later."
+              : "यह फ़ीचर अभी उपलब्ध नहीं है। कृपया बाद में देखें।"}
+          </p>
+          <button
+            onClick={onLogout}
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          >
+            {language === "en" ? "Logout" : "लॉगआउट"}
+          </button>
         </div>
       </div>
     );
