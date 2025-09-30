@@ -279,7 +279,12 @@ function App() {
                   currentUser ? (
                     currentUser.role === "gram_sabha" ? (
                       <Navigate to="/claimant-dashboard" replace />
+                    ) : ["public", "ngo", "researcher"].includes(
+                        currentUser.role
+                      ) ? (
+                      <Navigate to="/public" replace />
                     ) : (
+                      // for roles public, ngo, researcher redirected to /public
                       <Navigate to="/dashboard" replace />
                     )
                   ) : (
