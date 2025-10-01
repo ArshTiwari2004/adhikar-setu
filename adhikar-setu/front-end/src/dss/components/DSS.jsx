@@ -155,6 +155,9 @@ const DSS = () => {
     
     setFilteredBeneficiaries(beneficiaries);
     
+    // Automatically switch to analysis tab when search is performed
+    setActiveTab('analysis');
+    
     setTimeout(() => {
       setIsLoading(false);
     }, 50);
@@ -435,14 +438,13 @@ const DSS = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
             onClick={() => setActiveTab('analysis')}
-            disabled={!hasSearched}
           >
             <BarChart3 className="w-4 h-4 mr-2" />
             Analysis
           </button>
         </div>
 
-        {/* Search Section - MOVED ABOVE SCHEMES */}
+        {/* Search Section */}
         <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
           <div className="flex items-center mb-5">
             <div className="p-2 bg-blue-100 rounded-lg mr-3">
@@ -495,7 +497,7 @@ const DSS = () => {
                 ) : (
                   <>
                     <Search className="w-4 h-4 mr-2" />
-                    Search
+                    Search & Analyze
                   </>
                 )}
               </button>
@@ -506,6 +508,7 @@ const DSS = () => {
                   setFilteredBeneficiaries([]);
                   setHasSearched(false);
                   setExpandedBeneficiary(null);
+                  setActiveTab('schemes');
                 }}
                 className="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 font-medium"
                 disabled={isLoading}
@@ -529,7 +532,7 @@ const DSS = () => {
           )}
         </div>
 
-        {/* Schemes Grid - NOW BELOW SEARCH */}
+        {/* Schemes Grid */}
         {activeTab === 'schemes' && (
           <div className="mb-10">
             <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
@@ -545,26 +548,45 @@ const DSS = () => {
         )}
 
         {/* Beneficiaries Section */}
-        {hasSearched && activeTab === 'analysis' && (
+        {activeTab === 'analysis' && (
           <div>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
               <h2 className="text-xl font-semibold text-gray-800 flex items-center">
                 <UserCheck className="w-5 h-5 mr-2 text-blue-500" />
-                Beneficiaries Analysis ({filteredBeneficiaries.length})
+                {hasSearched ? `Beneficiaries Analysis (${filteredBeneficiaries.length})` : 'Beneficiaries Analysis'}
               </h2>
-              <div className="flex flex-wrap gap-3">
-                <div className="bg-white px-3 py-1.5 rounded-lg border border-gray-200 text-sm">
-                  <span className="text-gray-500 mr-1">FRA Holders:</span>
-                  <span className="font-medium text-green-600">{filteredBeneficiaries.filter(b => b.fraHolder).length}</span>
+              {hasSearched && (
+                <div className="flex flex-wrap gap-3">
+                  <div className="bg-white px-3 py-1.5 rounded-lg border border-gray-200 text-sm">
+                    <span className="text-gray-500 mr-1">FRA Holders:</span>
+                    <span className="font-medium text-green-600">{filteredBeneficiaries.filter(b => b.fraHolder).length}</span>
+                  </div>
+                  <div className="bg-white px-3 py-1.5 rounded-lg border border-gray-200 text-sm">
+                    <span className="text-gray-500 mr-1">ST Category:</span>
+                    <span className="font-medium text-purple-600">{filteredBeneficiaries.filter(b => b.category === 'ST').length}</span>
+                  </div>
                 </div>
-                <div className="bg-white px-3 py-1.5 rounded-lg border border-gray-200 text-sm">
-                  <span className="text-gray-500 mr-1">ST Category:</span>
-                  <span className="font-medium text-purple-600">{filteredBeneficiaries.filter(b => b.category === 'ST').length}</span>
-                </div>
-              </div>
+              )}
             </div>
 
-            {isLoading ? (
+            {!hasSearched ? (
+              <div className="bg-white rounded-lg p-8 text-center border border-gray-200">
+                <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  No Search Results
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Use the search filters above to find beneficiaries and analyze their scheme eligibility.
+                </p>
+                <button
+                  onClick={() => setActiveTab('schemes')}
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  <Home className="w-4 h-4 mr-2" />
+                  Browse Schemes
+                </button>
+              </div>
+            ) : isLoading ? (
               <div className="bg-white rounded-lg p-8 text-center border border-gray-200">
                 <Loader className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -572,6 +594,16 @@ const DSS = () => {
                 </h3>
                 <p className="text-gray-600">
                   Please wait while we fetch the data
+                </p>
+              </div>
+            ) : filteredBeneficiaries.length === 0 ? (
+              <div className="bg-white rounded-lg p-8 text-center border border-gray-200">
+                <UserCheck className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  No Beneficiaries Found
+                </h3>
+                <p className="text-gray-600">
+                  No beneficiaries match your current search criteria. Try adjusting your filters.
                 </p>
               </div>
             ) : (
