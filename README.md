@@ -271,8 +271,18 @@ npm start
 ```
 The backend API will be available at http://localhost:5000
 
+### Step 4: Model Setup & Usage (CNN-based Asset Mapping)
+Install required libraries
+```bash
+pip install -r requirements.txt
+```
+Running the Model
+From the project root:
+```bash
+python run_model.py
+```
 
-### Step 4: Docker Deployment 
+### Step 5: Docker Deployment 
 For containerized deployment ( Note: This will be done when the development is completed )
 ```bash
 cd adhikar-setu
