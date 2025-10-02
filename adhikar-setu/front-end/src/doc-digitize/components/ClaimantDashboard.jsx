@@ -89,17 +89,17 @@ const ClaimantDashboard = ({ user }) => {
   const stats = getStatusStats();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              {/* <h1 className="text-3xl font-bold text-gray-900">
                 FRA Claims Dashboard
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Welcome, {user.displayName || user.email}
+              </h1> */}
+              <p className="text-gray-800 mt-2 font-semibold text-xl">
+                Welcome, {user?.profile?.name || user.email}!
               </p>
             </div>
 

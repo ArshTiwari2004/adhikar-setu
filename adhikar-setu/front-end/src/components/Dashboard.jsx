@@ -24,7 +24,8 @@ const Dashboard = ({ user, language }) => {
   const [selectedState, setSelectedState] = useState("Tripura");
   const [selectedDistrict, setSelectedDistrict] = useState("All Districts");
   const [selectedVillage, setSelectedVillage] = useState("All Villages");
-  const [selectedClaimStatus, setSelectedClaimStatus] = useState("All Statuses");
+  const [selectedClaimStatus, setSelectedClaimStatus] =
+    useState("All Statuses");
   const [selectedTribalGroup, setSelectedTribalGroup] = useState("All Groups");
   const [showMapNote, setShowMapNote] = useState(true);
   const mapContainerRef = useRef(null);
@@ -616,10 +617,16 @@ const Dashboard = ({ user, language }) => {
               <div style="font-weight: 600; font-size: 14px; margin-bottom: 6px; color:#111;">
                 ${p.claimant_name || "—"}
               </div>
-              <div><span style="font-weight:500; color:#555;">ID:</span> ${p.claim_id || "—"}</div>
-              <div><span style="font-weight:500; color:#555;">Status:</span> ${p.status || "—"}</div>
+              <div><span style="font-weight:500; color:#555;">ID:</span> ${
+                p.claim_id || "—"
+              }</div>
+              <div><span style="font-weight:500; color:#555;">Status:</span> ${
+                p.status || "—"
+              }</div>
               <div><span style="font-weight:500; color:#555;">Area:</span> ${area}</div>
-              <div><span style="font-weight:500; color:#555;">Date:</span> ${p.submitted_at}</div>
+              <div><span style="font-weight:500; color:#555;">Date:</span> ${
+                p.submitted_at
+              }</div>
             </div>
           `;
           new mapboxgl.Popup({ offset: 12 })
@@ -674,24 +681,20 @@ const Dashboard = ({ user, language }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="bg-white ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                {language === "en" ? "Adhikar Setu" : "अधिकार सेतु"}
-              </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-gray-800 mt-2 text-xl font-semibold">
                 {language === "en"
-                  ? `Welcome back, ${user.name || user.email?.split("@")[0]}`
-                  : `वापसी पर स्वागत, ${user.name || user.email?.split("@")[0]}`}
-              </p>
-              <p className="text-sm text-gray-500 mt-1">
-                {language === "en"
-                  ? "Bridging forest communities with their rights through technology"
-                  : "प्रौद्योगिकी के माध्यम से वन समुदायों को उनके अधिकारों से जोड़ना"}
+                  ? `Welcome, ${
+                      user.profile.name || user.email?.split("@")[0]
+                    }!`
+                  : `स्वागत है, ${
+                      user.profile.name || user.email?.split("@")[0]
+                    }!`}
               </p>
             </div>
 
@@ -749,12 +752,12 @@ const Dashboard = ({ user, language }) => {
                     </h3>
                     <p className="text-gray-600">{kpi.title}</p>
                     <div className="flex items-center mt-1">
-                      <span
+                      {/* <span
                         className={`text-sm font-semibold ${trendColor} flex items-center`}
                       >
                         {trendIcon}
                         <span className="ml-1">{kpi.change}</span>
-                      </span>
+                      </span> */}
                     </div>
                   </div>
                 </div>
@@ -1098,7 +1101,9 @@ const Dashboard = ({ user, language }) => {
                   <span className="text-sm font-medium text-gray-600">
                     {language === "en" ? "Success Rate" : "सफलता दर"}
                   </span>
-                  <span className="text-sm font-bold text-green-600">89.2%</span>
+                  <span className="text-sm font-bold text-green-600">
+                    89.2%
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-sm font-medium text-gray-600">
@@ -1106,11 +1111,15 @@ const Dashboard = ({ user, language }) => {
                       ? "Avg. Processing Time"
                       : "औसत प्रसंस्करण समय"}
                   </span>
-                  <span className="text-sm font-bold text-blue-600">12 days</span>
+                  <span className="text-sm font-bold text-blue-600">
+                    12 days
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="text-sm font-medium text-gray-600">
-                    {language === "en" ? "Total Area Covered" : "कुल क्षेत्र कवर"}
+                    {language === "en"
+                      ? "Total Area Covered"
+                      : "कुल क्षेत्र कवर"}
                   </span>
                   <span className="text-sm font-bold text-purple-600">
                     2,847 Ha

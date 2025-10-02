@@ -20,6 +20,9 @@ import {
   UserRound,
   Earth,
 } from "lucide-react";
+import { logoutUser } from "../firebase/authService";
+import { useNavigate } from "react-router-dom";
+import CustomTooltip from "@/global/CustomTooltip";
 
 const Navigation = ({
   user,
@@ -35,8 +38,9 @@ const Navigation = ({
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Handle scroll effect
+  // Handle scroll effect for enhanced navbar
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -61,20 +65,22 @@ const Navigation = ({
 
   const handleLogout = async () => {
     try {
-      // await logoutUser();
+      await logoutUser();
       onLogout();
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
 
+  // what i did below is to modify the menu click handler to redirect gram_sabha users to claimant-dashboard and let other roles behave as before, they will be changed later as per requirements
   const handleMenuClick = (item) => {
     if (item.id === "dashboard" && user.role === "gram_sabha") {
-      // navigate("/claimant-dashboard");
-      onScreenChange("claimant-dashboard");
+      navigate("/claimant-dashboard");
+      onScreenChange("claimant-dashboard"); // <-- set state to match redirected screen
     } else {
       onScreenChange(item.id);
     }
+
     setIsMenuOpen(false);
   };
 
@@ -122,6 +128,12 @@ const Navigation = ({
         icon: Globe,
         roles: ["gram_sabha", "frc", "sdlc", "dlc", "mota"],
       },
+      // {
+      //   id: "profile",
+      //   name: language === "en" ? "Profile" : "प्रोफाइल",
+      //   icon: UserRound,
+      //   roles: ["gram_sabha", "frc", "sdlc", "dlc", "mota"],
+      // },
       {
         id: "dss-results",
         name: language === "en" ? "DSS Results" : "DSS परिणाम",
@@ -154,8 +166,8 @@ const Navigation = ({
             <div className="flex items-center group">
               <div className="flex-shrink-0 flex items-center">
                 <div className="relative">
-                  <div className="absolute inset-0  rounded-xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                  <div className="relative p-2 rounded-xl  ">
+                  <div className="absolute inset-0 "></div>
+                  <div className="relative p-2 rounded-xl">
                     <img
                       src="/logo1.png"
                       alt="Adhikar-Setu Logo"
@@ -163,7 +175,7 @@ const Navigation = ({
                     />
                   </div>
                 </div>
-                <div className="ml-3 mr-8">
+                <div className="ml-3">
                   <h1
                     className={`text-xl font-bold  ${
                       isDarkMode ? "from-green-400 to-emerald-400" : ""
@@ -182,15 +194,16 @@ const Navigation = ({
 
             {/* Desktop Nav */}
             <div className="hidden md:block">
-              <div className="flex items-center space-x-1">
+              <div className="ml-10 flex items-baseline space-x-1">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = currentScreen === item.id;
                   return (
                     <button
                       key={item.id}
+                      // changed to use handleMenuClick as defined above
                       onClick={() => handleMenuClick(item)}
-                      className={`relative flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 group cursor-pointer ${
+                      className={`relative flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 cursor-pointer group ${
                         isActive
                           ? isDarkMode
                             ? "text-white"
@@ -212,11 +225,7 @@ const Navigation = ({
                           }`}
                         ></div>
                       )}
-                      <Icon
-                        className={`h-4 w-4 mr-2 relative z-10 ${
-                          isActive ? "animate-pulse" : ""
-                        }`}
-                      />
+                      <Icon className="h-4 w-4 mr-2 relative z-10" />
                       <span className="relative z-10">{item.name}</span>
                       {isActive && (
                         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-2 w-1.5 h-1.5 bg-white rounded-full"></div>
@@ -247,20 +256,42 @@ const Navigation = ({
               </button>
 
               {/* Language */}
-              <button
-                onClick={() => setLanguage(language === "en" ? "hi" : "en")}
-                className={`relative p-2.5 rounded-xl transition-all duration-300 group overflow-hidden cursor-pointer ${
-                  isDarkMode
-                    ? "hover:bg-gray-800 text-gray-300"
-                    : "hover:bg-gray-100 text-gray-600"
-                }`}
-                title={
+              <CustomTooltip
+                text={
                   language === "en" ? "Switch to Hindi" : "अंग्रेजी में बदलें"
                 }
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <Earth className="h-5 w-5 relative z-10 group-hover:rotate-12 transition-transform" />
-              </button>
+                <button
+                  onClick={() => setLanguage(language === "en" ? "hi" : "en")}
+                  className={`relative p-2.5 rounded-xl transition-all duration-300 cursor-pointer group overflow-hidden ${
+                    isDarkMode
+                      ? "hover:bg-gray-800 text-gray-300"
+                      : "hover:bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <Earth className="h-5 w-5 relative z-10 group-hover:rotate-12 transition-transform" />
+                </button>
+              </CustomTooltip>
+
+              {/* Dark Mode */}
+              {/* <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`p-2 rounded-lg ${
+                  isDarkMode
+                    ? "hover:bg-gray-800 text-amber-300"
+                    : "hover:bg-gray-100 text-gray-600"
+                }`}
+                title={
+                  isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+                }
+              >
+                {isDarkMode ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
+              </button> */}
 
               {/* Profile Dropdown (Desktop) */}
               <div className="relative hidden md:block" ref={dropdownRef}>
@@ -268,7 +299,7 @@ const Navigation = ({
                   onClick={() =>
                     setIsProfileDropdownOpen(!isProfileDropdownOpen)
                   }
-                  className={`flex items-center space-x-3 pl-2 pr-3 py-2 rounded-xl transition-all duration-300 group cursor-pointer ${
+                  className={`flex items-center space-x-3 pl-2 pr-3 py-2 rounded-xl transition-all duration-300 cursor-pointer group ${
                     isDarkMode
                       ? "hover:bg-gray-800"
                       : "hover:bg-gray-100 hover:shadow-md"
@@ -309,18 +340,15 @@ const Navigation = ({
 
                 {isProfileDropdownOpen && (
                   <div
-                    className={`absolute right-0 mt-2 w-56 rounded-xl shadow-xl py-2 z-50 backdrop-blur-lg border transition-all duration-200 animate-in slide-in-from-top-2 ${
+                    className={`absolute right-0 mt-2 w-56 rounded-xl shadow-xl py-2 z-50 backdrop-blur-lg border transition-all duration-200 ${
                       isDarkMode
                         ? "bg-gray-800/95 border-gray-700"
                         : "bg-white/95 border-gray-200"
                     }`}
                   >
                     <button
-                      onClick={() => {
-                        onScreenChange("profile");
-                        setIsProfileDropdownOpen(false);
-                      }}
-                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group cursor-pointer ${
+                      onClick={() => onScreenChange("profile")}
+                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
                         isDarkMode
                           ? "text-gray-300 hover:bg-gray-700/50 hover:text-white"
                           : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -338,11 +366,8 @@ const Navigation = ({
                       {language === "en" ? "Profile" : "प्रोफाइल"}
                     </button>
                     <button
-                      onClick={() => {
-                        onScreenChange("settings");
-                        setIsProfileDropdownOpen(false);
-                      }}
-                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group cursor-pointer ${
+                      onClick={() => onScreenChange("settings")}
+                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
                         isDarkMode
                           ? "text-gray-300 hover:bg-gray-700/50 hover:text-white"
                           : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -360,11 +385,8 @@ const Navigation = ({
                       {language === "en" ? "Settings" : "सेटिंग्स"}
                     </button>
                     <button
-                      onClick={() => {
-                        onScreenChange("settings");
-                        setIsProfileDropdownOpen(false);
-                      }}
-                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group cursor-pointer ${
+                      onClick={() => onScreenChange("settings")}
+                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
                         isDarkMode
                           ? "text-gray-300 hover:bg-gray-700/50 hover:text-white"
                           : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -388,7 +410,7 @@ const Navigation = ({
                     ></div>
                     <button
                       onClick={handleLogout}
-                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group cursor-pointer ${
+                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 cursor-pointer group ${
                         isDarkMode
                           ? "text-red-400 hover:bg-red-500/10"
                           : "text-red-600 hover:bg-red-50"
@@ -431,9 +453,9 @@ const Navigation = ({
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden pb-4">
+            <div className="md:hidden">
               <div
-                className={`px-2 pt-4 space-y-2 border-t ${
+                className={`px-2 pt-2 pb-3 space-y-2 sm:px-3 border-t ${
                   isDarkMode ? "border-gray-800" : "border-gray-200"
                 }`}
               >
@@ -444,9 +466,10 @@ const Navigation = ({
                     <button
                       key={item.id}
                       onClick={() => {
-                        handleMenuClick(item);
+                        onScreenChange(item.id);
+                        setIsMenuOpen(false);
                       }}
-                      className={`relative flex items-center w-full px-4 py-3.5 rounded-xl text-base font-medium transition-all duration-300 overflow-hidden ${
+                      className={`relative flex items-center w-full px-3 py-3.5 rounded-xl text-base font-medium transition-all duration-300 overflow-hidden ${
                         isActive
                           ? "text-white shadow-lg"
                           : isDarkMode
@@ -473,11 +496,7 @@ const Navigation = ({
                 })}
 
                 {/* Mobile User Actions */}
-                <div
-                  className={`pt-4 mt-4 border-t ${
-                    isDarkMode ? "border-gray-800" : "border-gray-200"
-                  }`}
-                >
+                <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-800">
                   <div
                     className={`flex items-center px-3 py-3 mb-3 rounded-xl ${
                       isDarkMode ? "bg-gray-800/50" : "bg-gray-50"
@@ -491,7 +510,7 @@ const Navigation = ({
                           "U"}
                       </div>
                     </div>
-                    <div className="flex-1">
+                    <div>
                       <p
                         className={`text-base font-semibold ${
                           isDarkMode ? "text-white" : "text-gray-900"
@@ -504,7 +523,7 @@ const Navigation = ({
                       </p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2 mt-3">
                     <button
                       onClick={() => {
                         onScreenChange("profile");
@@ -536,13 +555,13 @@ const Navigation = ({
                   </div>
                   <button
                     onClick={handleLogout}
-                    className={`mt-2 flex items-center justify-center w-full px-3 py-3.5 rounded-xl text-base font-medium transition-all duration-300 ${
+                    className={`mt-3 flex items-center justify-center w-full px-3 py-3.5 rounded-xl text-base font-medium transition-all duration-300 ${
                       isDarkMode
                         ? "bg-red-500/10 text-red-400 hover:bg-red-500/20"
                         : "bg-red-50 text-red-600 hover:bg-red-100"
                     }`}
                   >
-                    <LogOut className="h-5 w-5 mr-2" />
+                    <LogOut className="h-5 w-5 mr-3" />
                     {language === "en" ? "Logout" : "लॉग आउट"}
                   </button>
                 </div>
