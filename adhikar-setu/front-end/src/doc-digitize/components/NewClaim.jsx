@@ -31,9 +31,10 @@ const NewClaim = ({ user, onClaimCreated }) => {
     },
     {
       title: "Location Details",
-      description: "Specify the location of your land",
+      description:
+        "Specify the location of your land and click on Submit below",
     },
-    { title: "Submit Claim", description: "Confirm and submit your claim" },
+    // { title: "Submit Claim", description: "Confirm and submit your claim" },
   ];
 
   const handleDocumentsProcessed = useCallback((results) => {
@@ -265,9 +266,9 @@ const NewClaim = ({ user, onClaimCreated }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white ">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="bg-white ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <BackButton />
           <h1 className="text-3xl font-bold text-gray-900">New FRA Claim</h1>
@@ -275,11 +276,23 @@ const NewClaim = ({ user, onClaimCreated }) => {
             Submit your Forest Rights Act claim by uploading documents and
             filling required information
           </p>
+          <p className="text-gray-500 mt-4 text-sm">
+            For clarification and detailed rules, please refer to the official
+            document published by MoTA:&nbsp;
+            <a
+              href="https://tribal.nic.in/FRA/data/FRARulesBook.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              FRA Rules Book
+            </a>
+          </p>
         </div>
       </div>
 
       {/* Progress Stepper */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
         <div className="flex items-center justify-between mb-8">
           {steps.map((step, index) => (
             <div key={index} className="flex items-center">

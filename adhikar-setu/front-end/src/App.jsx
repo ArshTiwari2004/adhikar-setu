@@ -24,6 +24,7 @@ import NotFoundPage from "./global/NotFoundPage";
 import AssetMapping from "./assetsmapping/assetsmap";
 import Public from "./public/Public";
 import { AlertCircle } from "lucide-react";
+import { X } from "lucide-react";
 
 // Lazy load route components for better performance
 const Dashboard = lazy(() => import("./components/Dashboard"));
@@ -184,6 +185,7 @@ function App() {
   const [isLoggingOut, setIsLoggingOut] = useState(false); // New state to track logout process
   const location = useLocation();
   const navigate = useNavigate();
+  const [showBanner, setShowBanner] = useState(true);
 
   useEffect(() => {
     // Set up auth state listener
@@ -284,8 +286,32 @@ function App() {
         />
       )}
 
+      {currentUser && !isLoggingOut && showBanner && (
+        <div className="fixed top-16 left-0 right-0 z-40 bg-green-50 border-b border-green-200 text-green-800 text-sm px-4 py-2 flex items-center justify-center relative">
+          <p className="font-medium text-center">
+            You are using the{" "}
+            <span className="font-semibold">Beta version</span> of Adhikar Setu
+            – improvements are ongoing.
+          </p>
+          <button
+            onClick={() => setShowBanner(false)}
+            className="absolute right-4 text-green-700 hover:text-green-900 font-bold text-lg leading-none cursor-pointer"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+      )}
+
       {/* Routes */}
-      <main className={currentUser && !isLoggingOut ? "pt-16" : ""}>
+      <main
+        className={
+          currentUser && !isLoggingOut
+            ? showBanner
+              ? "pt-16" // navbar (pt-16) + banner (~pt-12)
+              : "pt-16" // only navbar
+            : ""
+        }
+      >
         <ErrorBoundary language={language}>
           <Suspense
             fallback={

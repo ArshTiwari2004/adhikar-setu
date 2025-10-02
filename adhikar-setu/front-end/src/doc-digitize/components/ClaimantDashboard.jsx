@@ -89,7 +89,7 @@ const ClaimantDashboard = ({ user }) => {
   const stats = getStatusStats();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white ">
       {/* Header */}
       <div className="">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -300,7 +300,7 @@ const ClaimantDashboard = ({ user }) => {
                     {!searchTerm && (
                       <button
                         onClick={handleNewClaim}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors cursor-pointer"
                       >
                         Submit Your First Claim
                       </button>
