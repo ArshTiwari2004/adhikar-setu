@@ -92,12 +92,12 @@ const Navigation = ({
         icon: Home,
         roles: ["gram_sabha", "frc", "sdlc", "dlc", "mota"],
       },
-      {
-        id: "claim-submission",
-        name: language === "en" ? "Submit Claim" : "दावा जमा करें",
-        icon: FileText,
-        roles: ["gram_sabha"],
-      },
+      // {
+      //   id: "claim-submission",
+      //   name: language === "en" ? "Submit Claim" : "दावा जमा करें",
+      //   icon: FileText,
+      //   roles: ["gram_sabha"],
+      // },
       {
         id: "verification",
         name: language === "en" ? "Verification" : "सत्यापन",
@@ -314,7 +314,7 @@ const Navigation = ({
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full blur-sm opacity-40 group-hover:opacity-60 transition-opacity"></div>
                     <div className="relative h-9 w-9 rounded-full bg-gradient-to-br from-green-600 to-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-lg ring-2 ring-white/20">
-                      {user.name?.charAt(0).toUpperCase() ||
+                      {user.profile.name?.charAt(0).toUpperCase() ||
                         user.email?.charAt(0).toUpperCase() ||
                         "U"}
                     </div>
@@ -325,7 +325,7 @@ const Navigation = ({
                         isDarkMode ? "text-white" : "text-gray-900"
                       }`}
                     >
-                      {user.name || user.email?.split("@")[0]}
+                      {user?.profile?.name || user.email?.split("@")[0]}
                     </p>
                     <p className="text-xs text-gray-500 capitalize font-medium">
                       {user.role?.replace(/_/g, " ")}
@@ -348,7 +348,7 @@ const Navigation = ({
                   >
                     <button
                       onClick={() => onScreenChange("profile")}
-                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
+                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group cursor-pointer ${
                         isDarkMode
                           ? "text-gray-300 hover:bg-gray-700/50 hover:text-white"
                           : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -367,7 +367,7 @@ const Navigation = ({
                     </button>
                     <button
                       onClick={() => onScreenChange("settings")}
-                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
+                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group cursor-pointer ${
                         isDarkMode
                           ? "text-gray-300 hover:bg-gray-700/50 hover:text-white"
                           : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -386,7 +386,7 @@ const Navigation = ({
                     </button>
                     <button
                       onClick={() => onScreenChange("settings")}
-                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
+                      className={`flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 group cursor-pointer ${
                         isDarkMode
                           ? "text-gray-300 hover:bg-gray-700/50 hover:text-white"
                           : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"

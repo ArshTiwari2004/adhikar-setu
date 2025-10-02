@@ -195,15 +195,13 @@ const ProfilePage = ({ user, language, onScreenChange }) => {
                     <input
                       type="text"
                       name="name"
-                      value={editedUser.name || ""}
+                      value={editedUser.profile?.name || ""}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
                     />
                   ) : (
                     <p className="text-gray-900">
-                      {user.name || language === "en"
-                        ? "Not provided"
-                        : "प्रदान नहीं किया गया"}
+                      {user.profile?.name || "Not provided"}
                     </p>
                   )}
                 </div>
