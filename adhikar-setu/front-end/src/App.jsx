@@ -507,7 +507,7 @@ function App() {
                 }
               />
 
-              <Route
+              {/* <Route
                 path="/public"
                 element={
                   <ProtectedRoute
@@ -518,12 +518,12 @@ function App() {
                     <Public user={currentUser} language={language} />
                   </ProtectedRoute>
                 }
-              />
+              /> */}
 
               {/* routes to test, this will be removed later from here and put in for specific roles */}
               {/* <Route path="/doc-digitize" element={<FinalDoc />} /> */}
               {/* <Route path="/location-detail" element={<LocationDetail />} /> */}
-              {/* <Route path="/public" element={<Public />} /> */}
+              <Route path="/public" element={<Public />} />
 
               {/* Catch-all → Redirect to appropriate page */}
               <Route

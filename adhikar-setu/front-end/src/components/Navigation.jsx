@@ -314,8 +314,8 @@ const Navigation = ({
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full blur-sm opacity-40 group-hover:opacity-60 transition-opacity"></div>
                     <div className="relative h-9 w-9 rounded-full bg-gradient-to-br from-green-600 to-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-lg ring-2 ring-white/20">
-                      {user.profile.name?.charAt(0).toUpperCase() ||
-                        user.email?.charAt(0).toUpperCase() ||
+                      {user?.profile?.name?.charAt(0).toUpperCase() ||
+                        user?.email?.charAt(0).toUpperCase() ||
                         "U"}
                     </div>
                   </div>
